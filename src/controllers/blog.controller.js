@@ -27,8 +27,16 @@ export const getAllPosts = (req, res) => {
 	let limit = Number(req.query.limit) || 20; // Set a default limit
 	limit = limit < 1 ? 20 : limit;
 
+	const searchQuery = {
+		authorEmail: req.query.authorEmail,
+		title: req.query.title,
+		tags: req.query.tags,
+	};
+
+	const sortParams = req.query.sort; // Expected format "field1:asc,field2:desc"
+
 	blogService
-		.getAllBlogPosts(page, limit)
+		.getAllBlogPosts(page, limit, searchQuery, sortParams)
 		.then((result) => {
 			res.send({
 				message: 'All Posts',
@@ -52,6 +60,31 @@ export const getPost = (req, res) => {
 
 	blogService
 		.getBlogPost(postId)
+		.then((post) => {
+			res.send({
+				message: 'Post',
+				data: post,
+			});
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(err.status || 500);
+			res.send({
+				message: err.message,
+			});
+		});
+};
+export const getBlogPostByAuthor = (req, res) => {
+	const authorId = req.user.id;
+
+	let page = Number(req.query.page) || 1;
+	page = page < 1 ? 1 : page;
+	let limit = Number(req.query.limit) || 20; // Set a default limit
+	limit = limit < 1 ? 20 : limit;
+	const state = req.query.state || null;
+
+	blogService
+		.fetchBlogsByAuthor(authorId, page, limit, state)
 		.then((post) => {
 			res.send({
 				message: 'Post',

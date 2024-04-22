@@ -11,6 +11,11 @@ blogRoute.get(
 	passport.authenticate('jwt', { session: false }),
 	blogController.getPost
 );
+blogRoute.get(
+	'/author/:authorId',
+	passport.authenticate('jwt', { session: false }),
+	blogController.getBlogPostByAuthor
+);
 blogRoute.put(
 	'/:id',
 	passport.authenticate('jwt', { session: false }),
