@@ -2,7 +2,6 @@ import express from 'express';
 import * as authControllers from '../controllers/auth.controller.js';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { ErrorWithStatus } from '../exceptions/error-with-status.exceptions.js';
 import { generateMiddleWare } from '../middleware/validation.middleware.js';
 import { loginSchema, registerSchema } from '../validations/auth.validation.js';
 
@@ -24,13 +23,6 @@ authRoute.post(
 				if (err) {
 					return next(err);
 				}
-				// if (!user) {
-				// 	const error = new ErrorWithStatus(
-				// 		'Username or password is incorrect',
-				// 		400
-				// 	);
-				// 	return next(error);
-				// }
 
 				req.login(user, { session: false }, async (error) => {
 					if (error) return next(error);
